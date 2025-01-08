@@ -20,7 +20,7 @@ class QrValidator {
     return alphaNumericRegex.hasMatch(str);
   }
 
-  void addDataByType(QrCode qrCode, String data) {
+  static void addDataByType(QrCode qrCode, String data) {
     if (isNumeric(data)) {
       qrCode.addNumeric(data);
     } else if (isAlphaNumeric(data)) {
