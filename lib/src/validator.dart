@@ -6,30 +6,12 @@
 
 import 'package:qr/qr.dart';
 
+import 'optimization/mode.dart';
+import 'optimization/segments.dart';
 import 'qr_versions.dart';
 
 /// A utility class for validating and pre-rendering QR code data.
 class QrValidator {
-  static bool isNumeric(String str) {
-    final numericRegex = RegExp(r'^\d+$');
-    return numericRegex.hasMatch(str);
-  }
-
-  static bool isAlphaNumeric(String str) {
-    final alphaNumericRegex = RegExp(r'^[0-9A-Z \$%*+\-./:]+$');
-    return alphaNumericRegex.hasMatch(str);
-  }
-
-  static void addDataByType(QrCode qrCode, String data) {
-    if (isNumeric(data)) {
-      qrCode.addNumeric(data);
-    } else if (isAlphaNumeric(data)) {
-      qrCode.addAlphaNumeric(data);
-    } else {
-      qrCode.addData(data);
-    }
-  }
-
   /// Attempt to parse / generate the QR code data and check for any errors. The
   /// resulting [QrValidationResult] object will hold the status of the QR code
   /// as well as the generated QR code data.
@@ -42,7 +24,23 @@ class QrValidator {
     try {
       if (version != QrVersions.auto) {
         qrCode = QrCode(version, errorCorrectionLevel);
-        addDataByType(qrCode, data);
+        final segments = fromString(data, version);
+
+        debugPrint('Segments size: ${segments.length}');
+
+        for (final segment in segments) {
+          switch(segment.mode) {
+            case Mode.NUMERIC:
+              qrCode.addNumeric(segment.data);
+              break;
+            case Mode.ALPHANUMERIC:
+              qrCode.addAlphaNumeric(segment.data);
+              break;
+            default:
+              qrCode.addData(segment.data);
+              break;
+          }
+        }
       } else {
         qrCode = QrCode.fromData(
           data: data,
