@@ -26,8 +26,6 @@ class QrValidator {
         qrCode = QrCode(version, errorCorrectionLevel);
         final segments = fromString(data, version);
 
-        debugPrint('Segments size: ${segments.length}');
-
         for (final segment in segments) {
           switch(segment.mode) {
             case Mode.NUMERIC:
