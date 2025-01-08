@@ -10,6 +10,26 @@ import 'qr_versions.dart';
 
 /// A utility class for validating and pre-rendering QR code data.
 class QrValidator {
+  static bool isNumeric(String str) {
+    final numericRegex = RegExp(r'^\d+$');
+    return numericRegex.hasMatch(str);
+  }
+
+  static bool isAlphaNumeric(String str) {
+    final alphaNumericRegex = RegExp(r'^[0-9A-Z \$%*+\-./:]+$');
+    return alphaNumericRegex.hasMatch(str);
+  }
+
+  void addDataByType(QrCode qrCode, String data) {
+    if (isNumeric(data)) {
+      qrCode.addNumeric(data);
+    } else if (isAlphaNumeric(data)) {
+      qrCode.addAlphaNumeric(data);
+    } else {
+      qrCode.addData(data);
+    }
+  }
+
   /// Attempt to parse / generate the QR code data and check for any errors. The
   /// resulting [QrValidationResult] object will hold the status of the QR code
   /// as well as the generated QR code data.
@@ -22,7 +42,7 @@ class QrValidator {
     try {
       if (version != QrVersions.auto) {
         qrCode = QrCode(version, errorCorrectionLevel);
-        qrCode.addData(data);
+        addDataByType(qrCode, data);
       } else {
         qrCode = QrCode.fromData(
           data: data,
