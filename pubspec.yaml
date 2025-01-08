@@ -12,7 +12,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  qr: ^3.0.1
+  qr:
+    git:
+      url: https://github.com/szerookii/qr.dart.git
+      ref: master
 
 dev_dependencies:
   flutter_test:
