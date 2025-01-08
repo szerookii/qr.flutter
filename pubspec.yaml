@@ -12,11 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dijkstra: ^1.0.0
   qr:
     git:
       url: https://github.com/szerookii/qr.dart.git
       ref: master
+  dijkstra: ^0.0.4
 
 dev_dependencies:
   flutter_test:
